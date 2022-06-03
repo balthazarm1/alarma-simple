@@ -21,12 +21,24 @@ void setUp(void) //lo que hara al iniciar una prueba
 void tearDown(void){}
 
 //creo prueba
-void pin_debePermitirLeerEstado(void) // es imporante tomar en cuenta que sea static o global. que sea static me hara tomar en cuenta si la utilizo o no (por que es local). no me avisara si llegase a ser global
+void pin_debePermitirLeerEstado_0(void) // es imporante tomar en cuenta que sea static o global. que sea static me hara tomar en cuenta si la utilizo o no (por que es local). no me avisara si llegase a ser global
 {
     Pin miPin;
     Pin_init(&miPin, &miPuerto, MI_PIN); //se necesitara de esta funcion en el header que crearemos para tomar en cuenta esos argumentos que necesitamos
             //^ toma direcciones
-    const bool estado= Pin_lee(&miPin); //para definir bool (logica de bool) necesito la libreria stdbool | ademas se usara de una funcion Pin_lee
+    const bool estado= Pin_lee(&miPin); //para definir bool (logica de bool) necesito la libreria stdbool | ademas se usara de una funcion Pin_lee que devolvera un booleano | const permite que sea de lectura nada mas
+    TEST_ASSERT_FALSE(estado) //se agrega el FALSE para que espere una respuesta falsa
+    
+}
+void pin_debePermitirLeerEstado_1(void) // es imporante tomar en cuenta que sea static o global. que sea static me hara tomar en cuenta si la utilizo o no (por que es local). no me avisara si llegase a ser global
+{
+    Pin miPin;
+    Pin_init(&miPin, &miPuerto, MI_PIN); //se necesitara de esta funcion en el header que crearemos para tomar en cuenta esos argumentos que necesitamos
+            //^ toma direcciones
+    miPuerto.IDR = 1 << MI_PIN;
+    const bool estado= Pin_lee(&miPin); //para definir bool (logica de bool) necesito la libreria stdbool | ademas se usara de una funcion Pin_lee que devolvera un booleano | const permite que sea de lectura nada mas
+    TEST_ASSERT_TRUE(estado) //se agrega el FALSE para que espere una respuesta falsa
+    
 }
 
 int main(void)
