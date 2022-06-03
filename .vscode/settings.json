@@ -1,5 +1,10 @@
 {
     "files.associations": {
-        "ticks_systick.h": "c"
+        "ticks_systick.h": "c",
+        "ejemplo.h": "c",
+        "timer_systick.h": "c",
+        "stdint.h": "c",
+        "vcruntime.h": "c",
+        "unity_config.h": "c"
     }
 }
