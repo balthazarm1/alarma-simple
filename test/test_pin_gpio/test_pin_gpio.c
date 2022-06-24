@@ -27,19 +27,27 @@ void pin_debePermitirLeerEstado_0(void) // es imporante tomar en cuenta que sea 
     Pin_init(&miPin, &miPuerto, MI_PIN); //se necesitara de esta funcion en el header que crearemos para tomar en cuenta esos argumentos que necesitamos
             //^ toma direcciones
     const bool estado= Pin_lee(&miPin); //para definir bool (logica de bool) necesito la libreria stdbool | ademas se usara de una funcion Pin_lee que devolvera un booleano | const permite que sea de lectura nada mas
-    TEST_ASSERT_FALSE(estado) //se agrega el FALSE para que espere una respuesta falsa
+    TEST_ASSERT_FALSE(estado); //se agrega el FALSE para que espere una respuesta falsa
     
 }
-void pin_debePermitirLeerEstado_1(void) // es imporante tomar en cuenta que sea static o global. que sea static me hara tomar en cuenta si la utilizo o no (por que es local). no me avisara si llegase a ser global
+void pin_debePermitirLeerEstado_1(void)
 {
     Pin miPin;
-    Pin_init(&miPin, &miPuerto, MI_PIN); //se necesitara de esta funcion en el header que crearemos para tomar en cuenta esos argumentos que necesitamos
-            //^ toma direcciones
+    Pin_init(&miPin, &miPuerto, MI_PIN);
     miPuerto.IDR = 1 << MI_PIN;
-    const bool estado= Pin_lee(&miPin); //para definir bool (logica de bool) necesito la libreria stdbool | ademas se usara de una funcion Pin_lee que devolvera un booleano | const permite que sea de lectura nada mas
-    TEST_ASSERT_TRUE(estado) //se agrega el FALSE para que espere una respuesta falsa
-    
+    const bool estado= Pin_lee(&miPin); 
+    TEST_ASSERT_TRUE(estado);
 }
+void pin_debePermitirPonerSalidaEnCero(void) 
+{
+    Pin miPin; //dicha variable se la define varias veces => esta sera un posible refactory
+    Pin_init(&miPin, &miPuerto, MI_PIN);
+    Pin_escribe(&miPin, 0);
+    const uint32_t reset = miPuerto.BRR | (miPuerto.bsrr >> 16); //creo resultado RESET
+//  ^ constante                         ^ or  
+    enum{ RESET_ESPERADO = (1UL << MI_PIN)}; //creo resultado RESET_ESPERADO
+//                           ^Unsigned Long
+    TEST_ASSERT_EQUAL_HEX32(reset, RESET_ESPERADO);
 
 int main(void)
 {
@@ -48,5 +56,6 @@ int main(void)
     UNITY_BEGIN();
     RUN_TEST(pin_debePermitirLeerEstado_0);
     RUN_TEST(pin_debePermitirLeerEstado_1);
+    RUN_TEST(pin_debePermitirPonerSalidaEnCero);
     UNITY_END();   
 }

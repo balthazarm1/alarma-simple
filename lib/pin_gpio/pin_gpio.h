@@ -27,4 +27,7 @@ void Pin_init(Pin *self, GPIO_TypeDef *puerto, int numeroDePin); //sin haber ech
                                                 //^ numero de puerto
 
 bool Pin_lee(Pin *self);
+
+void Pin_escribe (Pin *self, bool valor);
+
 #endif
