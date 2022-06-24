@@ -43,11 +43,27 @@ void pin_debePermitirPonerSalidaEnCero(void)
     Pin miPin; //dicha variable se la define varias veces => esta sera un posible refactory
     Pin_init(&miPin, &miPuerto, MI_PIN);
     Pin_escribe(&miPin, 0);
-    const uint32_t reset = miPuerto.BRR | (miPuerto.bsrr >> 16); //creo resultado RESET
+    const uint32_t reset = miPuerto.BRR | (miPuerto.BSRR >> 16); //creo resultado RESET
 //  ^ constante                         ^ or  
-    enum{ RESET_ESPERADO = (1UL << MI_PIN)}; //creo resultado RESET_ESPERADO
+    const uint32_t set = miPuerto.BSRR & ((1UL << 16)- 1UL)
+    enum{ RESET_ESPERADO = (1UL << MI_PIN), SET_ESPERADO = 0 }; //creo resultado RESET_ESPERADO
 //                           ^Unsigned Long
     TEST_ASSERT_EQUAL_HEX32(reset, RESET_ESPERADO);
+    TEST_ASSERT_EQUAL_HEX32(set, SET_ESPERADO);
+}
+void pin_debePermitirPonerSalidaEnUno(void) 
+{
+    Pin miPin; 
+    Pin_init(&miPin, &miPuerto, MI_PIN);
+    Pin_escribe(&miPin, 1);
+    const uint32_t reset = miPuerto.BRR | (miPuerto.BSRR >> 16); //creo resultado RESET
+//  ^ constante                         ^ or  
+    const uint32_t set = miPuerto.BSRR & ((1UL << 16)- 1UL) //para volver mas rigurosa la funcion
+    enum{ RESET_ESPERADO = 0, SET_ESPERADO (1UL << MI_PIN)}; //creo resultado RESET_ESPERADO
+//                           ^Unsigned Long
+    TEST_ASSERT_EQUAL_HEX32(reset, RESET_ESPERADO);
+    TEST_ASSERT_EQUAL_HEX32(set, SET_ESPERADO);
+}
 
 int main(void)
 {
@@ -57,5 +73,6 @@ int main(void)
     RUN_TEST(pin_debePermitirLeerEstado_0);
     RUN_TEST(pin_debePermitirLeerEstado_1);
     RUN_TEST(pin_debePermitirPonerSalidaEnCero);
+    RUN_TEST(pin_debePermitirPonerSalidaEnUno);
     UNITY_END();   
 }

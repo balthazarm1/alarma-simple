@@ -10,5 +10,8 @@ bool Pin_lee(Pin *self)
 }
 void Pin_escribe (Pin *self, bool valor)
 {
-    self -> puerto -> BRR = (1 << self -> numeroDePin); // equivale a self -> puerto -> BRR =0x00002000
+    if(!valor) //si valor es nulo
+        self -> puerto -> BRR = (1 << self -> numeroDePin); // equivale a self -> puerto -> BRR =0x00002000
+    else //si valor es uno
+        self -> puerto -> BSRR = (1 << self -> numeroDePin);
 }
