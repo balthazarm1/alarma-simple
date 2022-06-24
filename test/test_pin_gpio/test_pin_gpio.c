@@ -46,6 +46,7 @@ int main(void)
     TimerSysTick_init();
     TimerSysTick_esperaMilisegundos(500); //delay necesario
     UNITY_BEGIN();
-    RUN_TEST(pin_debePermitirLeerEstado);
+    RUN_TEST(pin_debePermitirLeerEstado_0);
+    RUN_TEST(pin_debePermitirLeerEstado_1);
     UNITY_END();   
 }
